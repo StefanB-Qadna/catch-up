@@ -1,0 +1,10 @@
+{
+  "name": "catch-up",
+  "version": "0.1.0",
+  "description": "Turn a repo's open pull requests into a briefing page for a tech lead who does not read code, collect their decisions, and draft PR comments from them.",
+  "author": { "name": "StefanB-Qadna" },
+  "homepage": "https://github.com/StefanB-Qadna/catch-up",
+  "repository": "https://github.com/StefanB-Qadna/catch-up",
+  "license": "MIT",
+  "keywords": ["pull-requests", "review", "tech-lead", "briefing"]
+}

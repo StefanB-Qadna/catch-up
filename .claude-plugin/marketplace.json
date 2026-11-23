@@ -1,0 +1,11 @@
+{
+  "name": "catch-up",
+  "owner": { "name": "StefanB-Qadna" },
+  "plugins": [
+    {
+      "name": "catch-up",
+      "source": "./",
+      "description": "PR briefings for a tech lead who switches projects."
+    }
+  ]
+}

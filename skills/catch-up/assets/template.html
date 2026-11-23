@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --sunk:#e8ecf2; --ink:#18202c; --muted:#5b6678; --line:#d5dbe4;
+  --accent:#2f4fd8; --accent-soft:#e3e8fc;
+  --ok:#1f7a4d; --ok-soft:#ddf2e6; --warn:#9a5b00; --warn-soft:#fdf0d8; --bad:#b4232c; --bad-soft:#fbe2e3;
+  --f-display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f141c; --surface:#171e29; --sunk:#1f2836; --ink:#e6ebf2; --muted:#9aa6b8; --line:#2c3748;
+  --accent:#8da2ff; --accent-soft:#232d4d;
+  --ok:#5fd39a; --ok-soft:#173326; --warn:#f2b552; --warn-soft:#3a2c12; --bad:#ff7a82; --bad-soft:#3d1a1e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141c; --surface:#171e29; --sunk:#1f2836; --ink:#e6ebf2; --muted:#9aa6b8; --line:#2c3748;
+  --accent:#8da2ff; --accent-soft:#232d4d;
+  --ok:#5fd39a; --ok-soft:#173326; --warn:#f2b552; --warn-soft:#3a2c12; --bad:#ff7a82; --bad-soft:#3d1a1e; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+a{color:var(--accent)}
+.wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.bar{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+header.bar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding-block:10px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:18px;letter-spacing:-.01em}
+.brand small{font-family:var(--f-mono);font-weight:400;font-size:12px;color:var(--muted);margin-left:8px}
+nav.jump{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+nav.jump a{font-size:13px;text-decoration:none;color:var(--muted);padding:4px 10px;border-radius:999px;border:1px solid var(--line)}
+nav.jump a:hover,nav.jump a:focus-visible{color:var(--ink);border-color:var(--accent)}
+.progress{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+main{padding-block:28px 64px;display:grid;gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;letter-spacing:-.015em;margin:0}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.1}
+h2{font-size:24px}
+h3{font-size:19px}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:18px;max-width:65ch}
+.section-head{display:grid;gap:6px;margin-bottom:16px}
+.section-head p{margin:0;color:var(--muted);max-width:65ch}
+.tldr{display:grid;gap:14px}
+.tldr ol{margin:0;padding-left:22px;display:grid;gap:6px;max-width:70ch}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-family:var(--f-display);font-size:28px;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.away{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:grid;gap:12px}
+.away ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.callout{border-radius:10px;padding:12px 14px;background:var(--warn-soft);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent);font-size:15px}
+.decisions{display:grid;gap:14px}
+.decision{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:grid;gap:12px}
+.decision.done{border-color:color-mix(in srgb,var(--ok) 55%,var(--line))}
+.d-top{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;justify-content:space-between}
+.d-ctx{margin:0;max-width:68ch}
+.d-q{font-weight:700;margin:0}
+.d-rec{margin:0;font-size:15px;color:var(--muted)}
+.d-rec strong{color:var(--ink)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:inherit;font-size:14px;padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);cursor:pointer;text-align:left}
+.opt:hover{border-color:var(--accent)}
+.opt:focus-visible,.btn:focus-visible,summary:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.opt[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+textarea{width:100%;min-height:58px;font:inherit;font-size:14px;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical}
+.saved{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill.low{background:var(--ok-soft);color:var(--ok)}
+.pill.med{background:var(--warn-soft);color:var(--warn)}
+.pill.high{background:var(--bad-soft);color:var(--bad)}
+.pill.done{background:var(--ok-soft);color:var(--ok)}
+.pill.follow{background:var(--accent-soft);color:var(--accent)}
+.features{display:grid;gap:20px}
+.feature{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.f-head{padding:18px 20px;display:grid;gap:10px;border-bottom:1px solid var(--line)}
+.f-head .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.f-body{padding:18px 20px;display:grid;gap:18px}
+.f-body > *{min-width:0}
+.verdict{display:grid;gap:4px;padding:12px 14px;border-radius:10px;background:var(--sunk)}
+.verdict b{font-family:var(--f-display)}
+.evidence{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.ev{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;border:1px solid var(--line);font-size:14px}
+.ev i{font-style:normal;font-family:var(--f-mono);font-weight:600;font-size:12px;padding:1px 7px;border-radius:6px;flex:none}
+.ev.ok i{background:var(--ok-soft);color:var(--ok)}
+.ev.gap i{background:var(--warn-soft);color:var(--warn)}
+.ev.bad i{background:var(--bad-soft);color:var(--bad)}
+.sig{margin:0;padding-left:20px;display:grid;gap:6px}
+.sig li::marker{color:var(--accent)}
+details{border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+details > summary{cursor:pointer;padding:10px 14px;font-weight:700;list-style:none;display:flex;gap:8px;align-items:center}
+details > summary::before{content:"▸";color:var(--muted);transition:transform .15s}
+details[open] > summary::before{transform:rotate(90deg)}
+details > .in{padding:4px 14px 14px;display:grid;gap:10px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;font-family:var(--f-mono);color:var(--muted);font-weight:600;letter-spacing:.03em}
+code,.mono{font-family:var(--f-mono);font-size:13px}
+code{background:var(--sunk);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+.miss{color:var(--bad);font-weight:700}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;overflow-x:auto}
+.qs{display:grid;gap:8px}
+.qs ol{margin:0;padding-left:22px;display:grid;gap:6px}
+.btn{font:inherit;font-size:13px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;justify-self:start}
+.btn:hover{border-color:var(--accent)}
+.lines{display:grid;gap:8px}
+.lines div{display:grid;gap:2px}
+.chores{display:grid;gap:10px}
+.chore{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+.chore .mono{color:var(--muted)}
+.foot{color:var(--muted);font-size:14px;display:grid;gap:8px;max-width:70ch}
+.foot ul{margin:0;padding-left:20px}
+.status-line{font-size:13px;color:var(--muted)}
+.bg{display:grid;gap:14px;padding:16px;border-radius:10px;background:var(--accent-soft)}
+.bg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px 22px}
+.bg h4{font-family:var(--f-display);font-size:15px;margin:0 0 4px}
+.bg p{margin:0;font-size:15px}
+.bg .story{border-left:3px solid var(--accent);padding-left:12px}
+.bg dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;font-size:14px}
+.bg dt{font-weight:700}
+.bg dd{margin:0}
+.unsure{font-size:14px;color:var(--warn)}
+.bglink{font-size:13px}
+.followup{display:grid;gap:6px;padding:12px 14px;border-radius:10px;border:1px dashed var(--accent)}
+.followup ul{margin:0;padding-left:20px}
+@media (max-width:560px){nav.jump{margin-left:0}.f-head,.f-body,.decision{padding:14px}}
+@media (prefers-reduced-motion:reduce){details > summary::before{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand" id="brand"></div>
+    <nav class="jump" aria-label="Sections">
+      <a href="#summary">Summary</a>
+      <a href="#decisions">Your decisions</a>
+      <a href="#features">Features</a>
+      <a href="#other">Other</a>
+    </nav>
+    <div class="progress" id="progress"></div>
+    <button class="btn" type="button" id="export">Download decisions</button>
+  </div>
+</header>
+
+<div class="wrap">
+<main>
+  <section id="summary" class="tldr">
+    <div class="eyebrow" id="period"></div>
+    <h1 id="headline"></h1>
+    <p class="lede">Each feature below has a card: why it exists, what it does, where it sits, what evidence exists and what is missing. Your decisions save in this browser. When you finish, press "Download decisions" and tell Claude.</p>
+    <ol id="summary-list"></ol>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="away" aria-labelledby="away-h" id="away-wrap">
+    <h2 id="away-h">While you were away</h2>
+    <ul id="away"></ul>
+  </section>
+
+  <section id="decisions" aria-labelledby="dec-h">
+    <div class="section-head">
+      <div class="eyebrow">Only you can make these</div>
+      <h2 id="dec-h">Your decisions</h2>
+      <p>Each one starts with the feature behind it, then the question, my recommendation and the options. Pick one and, if you want, write a note.</p>
+    </div>
+    <div class="status-line" role="status">Decisions save in this browser. The download goes to your Downloads folder.</div>
+    <div class="decisions" id="decision-list"></div>
+  </section>
+
+  <section id="features" aria-labelledby="feat-h">
+    <div class="section-head">
+      <div class="eyebrow">What the team is building</div>
+      <h2 id="feat-h">Features</h2>
+      <p>Each card groups all the PRs of one feature. The risk tier says how much evidence you need: <span class="pill low">low</span> approve from the card, <span class="pill med">medium</span> look at the evidence, <span class="pill high">high</span> ask Claude for a walkthrough.</p>
+    </div>
+    <div id="callouts"></div>
+    <div class="features" id="feature-list"></div>
+  </section>
+
+  <section id="other" aria-labelledby="rest-h">
+    <div class="section-head">
+      <div class="eyebrow">No card needed</div>
+      <h2 id="rest-h">Other</h2>
+    </div>
+    <div class="chores" id="chore-list"></div>
+  </section>
+
+  <section class="foot" aria-labelledby="foot-h">
+    <h3 id="foot-h">How this page was made and what was not checked</h3>
+    <ul id="notes"></ul>
+  </section>
+</main>
+</div>
+
+<script type="application/json" id="catchup-data">__DATA__</script>
+<script>
+const DATA = JSON.parse(document.getElementById("catchup-data").textContent);
+const M = DATA.meta;
+const pr = n => `<a href="${M.repoUrl}/pull/${n}" target="_blank" rel="noopener" class="mono">#${n}</a>`;
+const linkPRs = s => String(s ?? "").replace(/(^|[\s(>])#(\d{1,6})\b/g, (m, pre, n) => pre + pr(n));
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TIER = { low: "low risk", med: "medium risk", high: "high risk" };
+const tierPill = (t, txt) => `<span class="pill ${t}">${esc(txt || TIER[t] || t)}</span>`;
+const FEATURES = DATA.features || [];
+const DECISIONS = DATA.decisions || [];
+const STORE_KEY = "catch-up:" + M.project + ":" + M.date;
+const state = (() => { try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); } catch { return {}; } })();
+
+document.title = M.project + " catch-up";
+document.getElementById("brand").innerHTML = `${esc(M.project)} catch-up<small>${esc(M.dateLabel || M.date)}</small>`;
+document.getElementById("period").textContent = M.period || "";
+document.getElementById("headline").textContent = DATA.headline || "";
+document.getElementById("summary-list").innerHTML = (DATA.summary || []).map(s => `<li>${linkPRs(s)}</li>`).join("");
+document.getElementById("stats").innerHTML = (DATA.stats || []).map(([n, l]) => `<div class="stat"><b>${esc(n)}</b><span>${esc(l)}</span></div>`).join("");
+if (DATA.away && DATA.away.length) document.getElementById("away").innerHTML = DATA.away.map(s => `<li>${linkPRs(s)}</li>`).join("");
+else document.getElementById("away-wrap").hidden = true;
+document.getElementById("callouts").innerHTML = (DATA.callouts || []).map(c => `<div class="callout" style="margin-bottom:16px">${c}</div>`).join("");
+document.getElementById("notes").innerHTML = (DATA.notes || []).map(n => `<li>${linkPRs(n)}</li>`).join("");
+
+function choiceBlock(key, options, saved) {
+  return `<div class="opts" role="group" aria-label="Options">${options.map(o =>
+      `<button class="opt" type="button" data-key="${key}" data-choice="${esc(o)}" aria-pressed="${saved.choice === o}">${esc(o)}</button>`).join("")}</div>
+    <label class="eyebrow" for="note-${key}">Note (optional)</label>
+    <textarea id="note-${key}" data-key="${key}" placeholder="Why, or what you want changed">${esc(saved.note || "")}</textarea>
+    <div class="saved" id="saved-${key}">${saved.at ? "Saved " + new Date(saved.at).toLocaleString() : ""}</div>`;
+}
+
+function featureContext(id) {
+  const f = FEATURES.find(x => x.id === id);
+  if (!f || !f.background) return "";
+  const b = f.background;
+  return `<div class="bg">
+    <div class="eyebrow">The feature behind this decision · ${esc(f.name)}</div>
+    <p>${esc(f.plain)}</p>
+    <div class="bg-grid">
+      <div><h4>Why it is being built</h4><p>${esc(b.need)} ${esc(b.today)}</p></div>
+      <div><h4>Where it came from</h4><p>${linkPRs(esc(b.origin))}</p></div>
+    </div>
+    ${b.story ? `<details><summary>An example</summary><div class="in"><p class="story">${esc(b.story)}</p></div></details>` : ""}
+    <a class="bglink" href="#feat-${id}">Full card with evidence and terms ↓</a>
+  </div>`;
+}
+
+function renderDecisions() {
+  document.getElementById("decision-list").innerHTML = DECISIONS.map(d => {
+    const saved = state["d-" + d.id] || {};
+    const sub = d.sub && d.sub.length ? `<details><summary>Detail questions (${d.sub.length})</summary><div class="in"><ol class="sig">${d.sub.map(s => `<li>${s}</li>`).join("")}</ol></div></details>` : "";
+    return `<article class="decision ${saved.choice ? "done" : ""}" data-key="d-${d.id}">
+      <div class="d-top"><span class="eyebrow">${linkPRs(esc(d.tag))}</span>${saved.choice ? '<span class="pill done">decided</span>' : tierPill(d.tier)}</div>
+      <h3>${esc(d.title)}</h3>
+      ${featureContext(d.feature)}
+      <p class="d-ctx">${linkPRs(d.context)}</p>
+      <p class="d-q">${esc(d.question)}</p>
+      <p class="d-rec">My recommendation: ${d.rec}</p>
+      ${sub}
+      ${choiceBlock("d-" + d.id, d.options, saved)}
+    </article>`;
+  }).join("") || `<p class="status-line">No decisions are waiting for you.</p>`;
+}
+
+function bgBlock(b) {
+  if (!b) return "";
+  return `<div class="bg">
+    <div class="eyebrow">Background · why this exists</div>
+    <div class="bg-grid">
+      <div><h4>The need</h4><p>${esc(b.need)}</p></div>
+      <div><h4>What happens today</h4><p>${esc(b.today)}</p></div>
+      <div><h4>Where it came from</h4><p>${linkPRs(esc(b.origin))}</p></div>
+      <div><h4>Why this way</h4><p>${esc(b.why)}</p></div>
+    </div>
+    ${b.story ? `<div><h4>An example</h4><p class="story">${esc(b.story)}</p></div>` : ""}
+    ${b.terms && b.terms.length ? `<div><h4>Words on this card</h4><dl>${b.terms.map(([t, d]) => `<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join("")}</dl></div>` : ""}
+    ${b.unsure ? `<p class="unsure">Not sure: ${esc(b.unsure)}</p>` : ""}
+  </div>`;
+}
+
+function followBlock(f) {
+  if (!f.followUp) return "";
+  const u = f.followUp;
+  return `<div class="followup"><b>Since your last review (${esc(u.since)})</b>
+    <ul>${(u.items || []).map(([done, text]) => `<li>${done ? "✅" : "⏳"} ${linkPRs(esc(text))}</li>`).join("")}</ul></div>`;
+}
+
+function renderFeatures() {
+  document.getElementById("feature-list").innerHTML = FEATURES.map(f => {
+    const key = "f-" + f.id;
+    const saved = state[key] || {};
+    const label = { ok: "OK", gap: "GAP", bad: "PROBLEM" };
+    const evid = (f.evidence || []).map(([k, t, d]) => `<div class="ev ${k}"><i>${label[k] || k}</i><div><strong>${esc(t)}.</strong> ${linkPRs(esc(d))}</div></div>`).join("");
+    const tests = f.tests || [];
+    const covered = tests.filter(t => t[2]).length;
+    const testTable = `<div class="scroll"><table><thead><tr><th>Promise (spec, ADR or PR)</th><th>The test that proves it</th></tr></thead><tbody>${
+      tests.map(([r, t, ok]) => `<tr><td>${esc(r)}</td><td>${ok ? `<span class="mono">${esc(t)}</span>` : `<span class="miss">${t ? esc(t) : "NO TEST"}</span>`}</td></tr>`).join("")}</tbody></table></div>`;
+    const prs = `<div class="scroll"><table><thead><tr><th>PR</th><th>What it does</th><th>Risk</th></tr></thead><tbody>${
+      (f.prs || []).map(([n, d, t]) => `<tr><td>${pr(n)}</td><td>${esc(d)}</td><td>${tierPill(t)}</td></tr>`).join("")}</tbody></table></div>`;
+    const qs = f.questions || [];
+    return `<article class="feature" id="feat-${f.id}">
+      <div class="f-head">
+        <div class="row">${tierPill(f.tier)}<span class="eyebrow">${esc(f.who)}</span>${f.followUp ? '<span class="pill follow">follow-up</span>' : ""}<span class="pill done f-done"${saved.choice ? "" : " hidden"}>decided</span></div>
+        <h3>${esc(f.name)}</h3>
+        <p style="margin:0;max-width:68ch">${esc(f.plain)}</p>
+      </div>
+      <div class="f-body">
+        ${bgBlock(f.background)}
+        ${followBlock(f)}
+        <div class="verdict"><b>Where it stands</b><span>${linkPRs(esc(f.verdict))}</span></div>
+        ${evid ? `<div><div class="eyebrow" style="margin-bottom:8px">Evidence</div><div class="evidence">${evid}</div></div>` : ""}
+        ${f.diagram ? `<div><div class="eyebrow" style="margin-bottom:8px">Where it sits in the system</div><div class="diagram"><pre class="mermaid">${esc(f.diagram)}</pre></div></div>` : ""}
+        ${f.signals && f.signals.length ? `<div><div class="eyebrow" style="margin-bottom:8px">Decisions hidden in the code</div><ul class="sig">${f.signals.map(s => `<li>${linkPRs(s)}</li>`).join("")}</ul></div>` : ""}
+        ${tests.length ? `<details><summary>What the tests promise · ${covered} of ${tests.length} covered</summary><div class="in">${testTable}</div></details>` : ""}
+        ${f.lines && f.lines.length ? `<details><summary>The lines that matter · walkthrough</summary><div class="in lines">${f.lines.map(([p, d]) => `<div><code>${esc(p)}</code><span>${esc(d)}</span></div>`).join("")}</div></details>` : ""}
+        ${qs.length ? `<details><summary>Questions for the developer (${qs.length})</summary><div class="in qs"><ol>${qs.map(q => `<li>${esc(q)}</li>`).join("")}</ol><button class="btn" type="button" data-copy="${f.id}">Copy the questions</button></div></details>` : ""}
+        <details><summary>PRs (${(f.prs || []).length})</summary><div class="in">${prs}</div></details>
+        <div style="display:grid;gap:8px"><div class="eyebrow">Your decision on the feature</div>${choiceBlock(key, f.actions || ["Approve", "Send the questions", "I want a walkthrough", "Block"], saved)}</div>
+      </div>
+    </article>`;
+  }).join("") || `<p class="status-line">No open feature work.</p>`;
+}
+
+function renderChores() {
+  document.getElementById("chore-list").innerHTML = (DATA.chores || []).map(([a, b, c]) =>
+    `<div class="chore"><span class="mono">${linkPRs(esc(a))}</span><strong>${esc(b)}</strong><span>${linkPRs(esc(c))}</span></div>`).join("") || `<p class="status-line">Nothing else.</p>`;
+}
+
+function updateProgress() {
+  const total = DECISIONS.length + FEATURES.length;
+  const done = Object.keys(state).filter(k => state[k] && state[k].choice).length;
+  document.getElementById("progress").textContent = `${done} of ${total} decisions made`;
+}
+
+function markSaved(key, text) { const el = document.getElementById("saved-" + key); if (el) el.textContent = text; }
+
+function save(key, patch) {
+  const next = { ...(state[key] || {}), ...patch, at: new Date().toISOString() };
+  state[key] = next;
+  updateProgress();
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); markSaved(key, "Saved " + new Date(next.at).toLocaleString()); }
+  catch { markSaved(key, "This browser does not save. Download your decisions before you close the page."); }
+}
+
+function applyState() {
+  Object.entries(state).forEach(([key, s]) => {
+    if (!s || !s.choice) return;
+    const card = document.querySelector(`.decision[data-key="${key}"]`);
+    if (card) { card.classList.add("done"); const p = card.querySelector(".d-top .pill"); if (p) { p.className = "pill done"; p.textContent = "decided"; } }
+    const fp = key.startsWith("f-") && document.querySelector(`#feat-${key.slice(2)} .f-done`);
+    if (fp) fp.hidden = false;
+  });
+  updateProgress();
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest(".opt");
+  if (b) {
+    b.parentElement.querySelectorAll(".opt").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    save(b.dataset.key, { choice: b.dataset.choice });
+    applyState();
+    return;
+  }
+  const c = e.target.closest("[data-copy]");
+  if (c) {
+    const f = FEATURES.find(x => x.id === c.dataset.copy);
+    const text = `Questions on ${f.name}:\n` + f.questions.map((q, i) => `${i + 1}. ${q}`).join("\n");
+    navigator.clipboard?.writeText(text).then(() => { c.textContent = "Copied"; setTimeout(() => c.textContent = "Copy the questions", 1800); })
+      .catch(() => { const sel = getSelection(); const r = document.createRange(); r.selectNodeContents(c.previousElementSibling); sel.removeAllRanges(); sel.addRange(r); c.textContent = "Selected, press Cmd+C"; });
+  }
+});
+
+const noteTimers = {};
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (t.tagName !== "TEXTAREA" || !t.dataset.key) return;
+  clearTimeout(noteTimers[t.dataset.key]);
+  noteTimers[t.dataset.key] = setTimeout(() => save(t.dataset.key, { note: t.value }), 700);
+});
+
+renderDecisions(); renderFeatures(); renderChores(); applyState();
+
+if (window.mermaid) {
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({ startOnLoad: false, theme: dark ? "dark" : "neutral", flowchart: { htmlLabels: true } });
+  mermaid.run({ querySelector: "pre.mermaid" }).catch(() => {});
+}
+
+document.getElementById("export").addEventListener("click", () => {
+  const labels = Object.fromEntries([...DECISIONS.map(d => ["d-" + d.id, d.title]), ...FEATURES.map(f => ["f-" + f.id, f.name])]);
+  const prsOf = Object.fromEntries(FEATURES.map(f => ["f-" + f.id, (f.prs || []).map(p => p[0])]));
+  const out = { exportedAt: new Date().toISOString(), project: M.project, page: STORE_KEY, decisions: {} };
+  Object.entries(state).forEach(([k, v]) => { if (v && (v.choice || v.note)) out.decisions[k] = { item: labels[k] || k, prs: prsOf[k] || [], choice: v.choice || null, note: v.note || "", at: v.at }; });
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `catch-up-decisions-${M.project}-${M.date}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+</script>
+</body>
+</html>
